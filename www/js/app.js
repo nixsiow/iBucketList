@@ -34,6 +34,11 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       templateUrl: 'templates/signup.html',
       controller: 'SignUpCtrl'
     })
+    .state('addWish', {
+      url: '/addWish',
+      templateUrl: 'templates/addWish.html',
+      controller: 'AddWishCtrl'
+    })
 
   $urlRouterProvider.otherwise('/home');
 });

@@ -1,5 +1,5 @@
 angular.module('starter.controllers', ['firebase'])
-  .controller('HomeCtrl', ['$scope', '$firebaseAuth', '$state', function($scope, $firebaseAuth, $state) {
+  .controller('HomeCtrl', ['$scope', '$firebaseAuth', '$state', 'SessionData', function($scope, $firebaseAuth, $state, SessionData) {
     $scope.login = {};
     var firebaseObj = new Firebase("https://burning-fire-1723.firebaseio.com");
     var loginObj = $firebaseAuth(firebaseObj);
@@ -13,9 +13,12 @@ angular.module('starter.controllers', ['firebase'])
         password: password
       })
       .then(function(user) {
-          //Success callback
-          console.log('Authentication successful');
-          $state.go('userHome')
+        //Success callback
+        // set the username in the SessionData service
+        // username get from the form user keyed in.
+        SessionData.setUser(username);
+        console.log('Authentication successful');
+        $state.go('userHome')
    
       }, function(error) {
           //Failure callback
@@ -27,7 +30,18 @@ angular.module('starter.controllers', ['firebase'])
       $state.go('signup');
     }
   }])
-  .controller('UserHomeCtrl', ['$scope', function($scope) {
+  .controller('UserHomeCtrl', ['$scope', '$state', '$firebase', function($scope, $state, $firebase) {
+    // Show add wish button on user page
+    $scope.showAddWish = function() {
+      $state.go('addWish');
+    }
+
+    // created a Firebase object using our unique firebase URL.
+    // Then we passed the firebaseObj to $firebase
+    // which would return the data as an array.
+    var firebaseObj = new Firebase("https://blistering-heat-2473.firebaseio.com/MyWish");
+    var sync = $firebase(firebaseObj);
+    $scope.wishes = sync.$asArray();
 
   }])
   .controller('SignUpCtrl', ['$scope', '$state', '$firebaseAuth', function($scope, $state, $firebaseAuth) {
@@ -60,3 +74,41 @@ angular.module('starter.controllers', ['firebase'])
     }
 
   }])
+  .controller('AddWishCtrl', ['$scope', '$state', '$firebase', 'SessionData', function($scope, $state, $firebase, SessionData) {
+    // show user page button
+    $scope.showUserHome = function() {
+      $state.go('userHome');
+    }
+
+    $scope.user = {};
+    // add wish function, send wish and save to firebase via $push service
+    $scope.add = function() {
+      var firebaseObj = new Firebase("https://blistering-heat-2473.firebaseio.com/MyWish");
+      var fb = $firebase(firebaseObj);
+      var user = SessionData.getUser();
+
+      fb.$push({
+        wish: $scope.user.wish,
+        email: user
+      }).then(function(ref) {
+        console.log(ref);
+        // clean the add wish's input
+        $scope.user.wish = "";
+        $state.go('userHome')
+      }, function(error) {
+        console.log("Error: ", error);
+      });
+    }
+  }])
+  .service('SessionData', function() {
+    var user = '';
+
+    return {
+      getUser: function() {
+        return user;
+      },
+      setUser: function(value) {
+        user = value;
+      }
+    };
+  });
