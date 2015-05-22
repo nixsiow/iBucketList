@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['firebase'])
   .controller('HomeCtrl', ['$scope', '$firebaseAuth', '$state', 'SessionData', function($scope, $firebaseAuth, $state, SessionData) {
     $scope.login = {};
-    var firebaseObj = new Firebase("https://burning-fire-1723.firebaseio.com");
+    var firebaseObj = new Firebase("https://ibucketlist-ionic.firebaseio.com");
     var loginObj = $firebaseAuth(firebaseObj);
 
     $scope.signin = function() {
@@ -39,7 +39,7 @@ angular.module('starter.controllers', ['firebase'])
     // created a Firebase object using our unique firebase URL.
     // Then we passed the firebaseObj to $firebase
     // which would return the data as an array.
-    var firebaseObj = new Firebase("https://blistering-heat-2473.firebaseio.com/MyWish");
+    var firebaseObj = new Firebase("https://ibucketlist-ionic.firebaseio.com/MyWish");
     var sync = $firebase(firebaseObj);
     $scope.wishes = sync.$asArray();
 
@@ -53,7 +53,7 @@ angular.module('starter.controllers', ['firebase'])
     // Create login object
     $scope.login = {};
     // Initialize firebaes object instance
-    var firebaseObj = new Firebase("https://burning-fire-1723.firebaseio.com");
+    var firebaseObj = new Firebase("https://ibucketlist-ionic.firebaseio.com");
     // Use firebaseAuth service to create loginObj, use to authenticate
     var loginObj = $firebaseAuth(firebaseObj);
     // create user function once submit button press(sign up)
@@ -83,7 +83,7 @@ angular.module('starter.controllers', ['firebase'])
     $scope.user = {};
     // add wish function, send wish and save to firebase via $push service
     $scope.add = function() {
-      var firebaseObj = new Firebase("https://blistering-heat-2473.firebaseio.com/MyWish");
+      var firebaseObj = new Firebase("https://ibucketlist-ionic.firebaseio.com/MyWish");
       var fb = $firebase(firebaseObj);
       var user = SessionData.getUser();
 
